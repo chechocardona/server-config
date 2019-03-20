@@ -65,5 +65,63 @@ A continuación se explica la instalación y configuración Apache Server. No es
 Para instalar apache en Ubuntu corra el comando:
 	
 	sudo apt-get install apache2
-		
+
+Para permitirle al servidor soportar enlaces profundos ('deep links') y añadir un proxy en caso de que la aplicación lo requiera, se debe modificar uno de los archivos de configuración de Apache. En ubuntu edite el archivo como se indica a continuación
 	
+	etc/apache2/sites-available/000-default.conf
+	
+Remueva el comentario de la línea:
+		
+	#ServerName www.example.com
+	
+Y añada su nombre de Dominio, por ejemplo
+	
+	ServerName www.certificates.com
+		
+Posterioremente vaya a la línea
+
+	DocumentRoot /var/www/html
+
+Y reescríbala de esta forma, reemplazando <project_name> con el nombre que haya definido previamente
+
+	Alias /<project_name> /var/www/<project_name>
+	<Directory /var/www/<project_name>>
+	     Options All
+	     AllowOverride All
+	     order allow,deny
+	     allow from all
+
+	RewriteEngine On
+	RewriteBase /<project_name>/
+	Options +FollowSymLinks
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ index.html [L,QSA]
+
+	</Directory>
+
+Ubíquese justo antes de la parte final del archivo donde se encuentra la etiqueta de final
+
+	</VirtualHost>
+
+Y agruegue las siguientes líneas que definen el comportamiento del proxy. Reemplace <project_name> por el nombre de proyecto que haya definido
+
+	RewriteEngine On
+	RewriteCond %{REQUEST_METHOD} OPTIONS
+	RewriteRule ^(.*)$ $1 [R=200,L]
+
+	RedirectMatch ^/$ /<project_name>/
+
+	ProxyPreserveHost On
+
+	<Proxy *>
+		Order allow,deny
+		Allow from all
+	</Proxy>
+	ProxyPass /auth http://localhost:3000/auth
+	ProxyPassReverse /auth http://localhost:3000/auth
+
+	ProxyPass /api http://localhost:3000/api
+	ProxyPassReverse /api http://localhost:3000/api
+
+Lo anterior es necesario en el caso de que su aplicación Angular defina una configuración de proxy en el archivo proxy.conf.js. Para este caso se definen para las peticiones a /api y /auth que se deben redirigir al REST server por el puerto 3000
