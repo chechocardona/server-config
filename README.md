@@ -66,7 +66,7 @@ Para instalar apache en Ubuntu corra el comando:
 	
 	sudo apt-get install apache2
 
-Para permitirle al servidor soportar enlaces profundos ('deep links') y añadir un proxy en caso de que la aplicación lo requiera, se debe modificar uno de los archivos de configuración de Apache. En ubuntu edite el archivo como se indica a continuación
+Para permitirle al servidor soportar enlaces profundos ('deep links') y añadir un proxy en caso de que la aplicación lo requiera, se debe modificar uno de los archivos de configuración de Apache. En Ubuntu navegue al archivo que se indica a continuación y modifíquelo según las instrucciones
 	
 	etc/apache2/sites-available/000-default.conf
 	
