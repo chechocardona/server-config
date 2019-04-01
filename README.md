@@ -1,4 +1,4 @@
-# server-config        
+# Configuración de Servidor para Certificados Académicos       
               
 ## 1. Instalación de Entorno de Desarrollo
 	
