@@ -49,7 +49,15 @@ Esta dirección deber reemplazarse por el Nombre del Dominio que haya configurad
 	http://www.certificates.com:3000
 		
 Debe reemplazar todas las URLs que hagan llamados al localhost por su Dominio.
-	
+## 3. Creación de Credenciales de Api de Google plus
+
+Para realizar la autenticación de usuarios la aplicación utiliza el Api de Google plus. Debido a que la URL de redirección cambia por el Nombre de Dominio que se defina en su servidor, es necesario actualizar las credenciales o crear unas. Para solicitar credenciales del Api de Google navegue a esta ['dirección'](https://console.developers.google.com/). Navegue a la pestaña 'Biblioteca' y habilite el API de Google plus, como se muestra en las imágenes.
+
+![Consola](img/Consola.png?raw=true "Consola")
+
+![GooglePlusApi](img/GooglePlusApi.png?raw=true "GooglePlusApi")
+
+
 ## 4. Creación de un 'Production Build' en Angular
 	
 La forma más simple de hacerlo es correr el siguiente comando en la carpeta del proyecto
