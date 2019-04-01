@@ -50,7 +50,7 @@ Esta dirección deber reemplazarse por el Nombre del Dominio que haya configurad
 		
 Debe reemplazar todas las URLs que hagan llamados al localhost por su Dominio.
 	
-## 3. Creación de un 'Production Build' en Angular
+## 4. Creación de un 'Production Build' en Angular
 	
 La forma más simple de hacerlo es correr el siguiente comando en la carpeta del proyecto
 	
@@ -58,7 +58,7 @@ La forma más simple de hacerlo es correr el siguiente comando en la carpeta del
 	
 Los archivos de salida se almacenarán en la carpeta dist. Estos archivos deberán ser copiados a la carpeta del servidor que los requiera para hacer el sitio web visible.
 	
-## 4. Instalación de Apache
+## 5. Instalación de Apache
 	
 A continuación se explica la instalación y configuración Apache Server. No es la única opción de servidor pero nos permite explicar los pasos para hacer la aplicación visible a internet.
 	
