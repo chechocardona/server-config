@@ -51,12 +51,17 @@ Esta dirección deber reemplazarse por el Nombre del Dominio que haya configurad
 Debe reemplazar todas las URLs que hagan llamados al localhost por su Dominio.
 ## 3. Creación de Credenciales de Api de Google plus
 
-Para realizar la autenticación de usuarios la aplicación utiliza el Api de Google plus. Debido a que la URL de redirección cambia por el Nombre de Dominio que se defina en su servidor, es necesario actualizar las credenciales o crear unas. Para solicitar credenciales del Api de Google navegue a esta ['dirección'](https://console.developers.google.com/). Navegue a la pestaña 'Biblioteca' y habilite el API de Google plus, como se muestra en las imágenes.
+Para realizar la autenticación de usuarios la aplicación utiliza el Api de Google plus. Debido a que la URL de redirección cambia por el Nombre de Dominio que se defina en su servidor, es necesario actualizar las credenciales o crear unas. Para solicitar credenciales del Api de Google navegue a esta ['dirección'](https://console.developers.google.com/). Navegue a la pestaña 'Biblioteca', busque 'Google Plus' y habilite el API, como se muestra en las imágenes.
 
 ![Consola](img/Consola.png?raw=true "Consola")
 
 ![GooglePlusApi](img/GooglePlusApi.png?raw=true "GooglePlusApi")
 
+Ahora navegue a la pestaña 'Credenciales' y seleccione de la lista desplegable 'Crear Credenciales' la opción 'ID de Cliente de OAuth'. De clic en la opción Web y llene los datos solicitados, como se muestra en la imagen. En 'Nombre', escriba el nombre de su aplicación. En 'Orígenes de Javascript Autorizados', escriba la url de su aplicación, por ejemplo en este caso sería: http://www.certificates.com. Y en 'URIs de redirección autorizados' escriba su url de redirección, por ejemplo: http://www.certificates.com/auth/google/callback
+
+![GenerateCredentials](img/GenerateCredentials.png?raw=true "GenerateCredentials")
+
+Al dar clic en 'Crear' se generarán unas nuevas credenciales de cliente que se deberán utilizar más adelante en la configuración de los REST-servers. Copie el 'ID de Cliente' y el 'Secreto de Cliente' y guárdelos para más adelante.
 
 ## 4. Creación de un 'Production Build' en Angular
 	
@@ -133,3 +138,27 @@ Y agruegue las siguientes líneas que definen el comportamiento del proxy. Reemp
 	ProxyPassReverse /api http://localhost:3000/api
 
 Lo anterior es necesario en el caso de que su aplicación Angular defina una configuración de proxy en el archivo proxy.conf.js. Para este caso se definen para las peticiones a /api y /auth que se deben redirigir al REST server por el puerto 3000
+
+## 6. Habilitar la aplicación
+
+Copie los archivos generados en el paso 4 a la carpeta correspondiente en el servidor Apache. Hágalo ejecutando el siguiente comando en la carpeta del repositorio de su aplicación Angular
+
+	sudo cp -r dist/* /var/www/casaur/
+
+Reinicie el servidor ejecutando:
+
+	sudo /etc/init.d/apache2 restart
+	
+## 7. Habilitar REST-Servers
+
+Siga los pasos descritos en el repositorio ['https://github.com/Blockchain4openscience/casaur-frontend'](https://github.com/Blockchain4openscience/casaur-frontend) para desplegar Fabric ('Deployment of Hyperledger Fabric onto a single-organization') e interactuar con el modelo de negocio través de los REST-servers (Interacting with the business network using the REST server). Tenga especial atención en reemplazar los campos de la variable COMPOSER_PROVIDERS por el ID de Cliente ('clientID') y el Secreto de Cliente ('clientSecret') creados en el paso 3 de este tutorial. Esto es:
+
+	export COMPOSER_PROVIDERS='{    "google": {        "provider": "google",        "module": "passport-google-oauth2",        "clientID": <Reemplace por su ID de cliente>,        "clientSecret": <Reemplace por su Secreto de Cliente>,        "authPath": "/auth/google",        "callbackURL": "/auth/google/callback",        "scope": "https://www.googleapis.com/auth/plus.login",        "successRedirect": "http://localhost:4200/callback",        "failureRedirect": "/"    }}'
+	
+Cree al menos un participante administrador para acceder a la aplicación
+	
+	composer participant add -c admin@casaur -d 		'{"$class":"org.degree.Administrator","email":"block4opsc@gmail.com","firstName":"Juan","lastName": "Admin","publicKey": "adminPK"}'
+	
+Ahora está todo listo para que navegue a su URL e interactúe con la aplicación desde cualquier lugar usando un navegador web.
+
+	
